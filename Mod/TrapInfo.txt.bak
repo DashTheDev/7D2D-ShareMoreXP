@@ -1,0 +1,82 @@
+Wood Spike
+-------------
+BlockType: 23599, 23600, 23601
+BlockName: trapSpikesWoodDmg2, trapSpikesWoodDmg1, trapSpikesWoodDmg0
+EntityThatKilledMe: NULL
+DamageSource: External
+DamageType: Piercing
+ItemClassName: trapSpikesWoodDmg2, trapSpikesWoodDmg1, trapSpikesWoodDmg0
+ItemClassID: 23599, 23600, 23601
+GetXPByDefault: false
+
+Metal Spike
+-------------
+BlockType: 23608, 23607, 23606
+BlockName: trapSpikesIronDmg0, trapSpikesIronDmg1, trapSpikesIronDmg2
+EntityThatKilledMe: NULL
+DamageSource: External
+DamageType: Piercing
+ItemClassName: trapSpikesIronDmg0, trapSpikesIronDmg1, trapSpikesIronDmg2
+ItemClassID: 23608, 23607, 23606
+GetXPByDefault: false
+
+Barbed Wire
+-------------
+BlockType: 23613, 23614, 23615
+BlockName: barbedFence, barbedFenceDamaged01, barbedFenceDamaged02
+EntityThatKilledMe: NULL
+DamageSource: External	
+DamageType: BarbedWire
+ItemClassName: barbedFence, barbedFenceDamaged01, barbedFenceDamaged02
+ItemClassID: 23613, 23614, 23615
+GetXPByDefault: false
+
+Blade Trap
+-------------
+EntityThatKilledMe: Player
+OwnerEntityId: Player
+DamageSource: External
+DamageType: Slashing
+ItemClassName: bladeTrap
+ItemClassID: 19058
+GetXPByDefault: false
+
+Dart Trap
+-------------
+EntityThatKilledMe: Player
+OwnerEntityId: Player
+DamageSource: External
+DamageType: Piercing
+ItemClassName: ammoDartIron
+ItemClassID: 65739
+GetXPByDefault: false
+
+Robotic Turret
+-------------
+EntityThatKilledMe: Player
+OwnerEntityId: Player
+DamageSource: External
+DamageType: Piercing
+ItemClassName: gunBotT2JunkTurret
+ItemClassID: 65600
+GetXPByDefault: true	
+
+Shotgun Turret
+-------------
+EntityThatKilledMe: Player
+OwnerEntityId: Player
+DamageSource: External
+DamageType: Piercing
+ItemClassName: ammoShotgunShell
+ItemClassID: 65678
+GetXPByDefault: false
+
+SMG Turret
+-------------
+EntityThatKilledMe: Player
+OwnerEntityId: Player
+DamageSource: External
+DamageType: Piercing
+ItemClassName: ammo9mmBulletBall
+ItemClassID: 65669
+GetXPByDefault: false
