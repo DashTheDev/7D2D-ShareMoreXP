@@ -68,11 +68,21 @@ public class AddLevelExpPatches
         return xpName.Contains(Constants.SharedPartyXPNameSuffix);
     }
 
+    private static bool XPIsTrapKill(string xpName)
+    {
+        return xpName.Contains(Constants.SharedTrapXPNameSuffix);
+    }
+
     private static string GetXPIcon(string xpName)
     {
         if (XPHasBeenShared(xpName))
         {
             return "ui_game_symbol_shared_xp";
+        }
+
+        if (XPIsTrapKill(xpName))
+        {
+            return "ui_game_symbol_trap_xp";
         }
 
         return "ui_game_symbol_xp";
