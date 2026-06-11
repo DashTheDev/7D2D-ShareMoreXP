@@ -40,12 +40,13 @@
   <ItemGroup>
     <Compile Include="Data\BarbedWire.cs" />
     <Compile Include="Data\Constants.cs" />
+    <Compile Include="Data\ReadableOpCodes.cs" />
     <Compile Include="Data\TrapType.cs" />
     <Compile Include="Data\IronSpikes.cs" />
     <Compile Include="Network\NetPackageTrapXPClient.cs" />
     <Compile Include="Data\EntityDamageType.cs" />
     <Compile Include="Data\WoodSpikes.cs" />
-    <Compile Include="Harmony\AddLevelExpPatch.cs" />
+    <Compile Include="Harmony\AddLevelExpPatches.cs" />
     <Compile Include="Harmony\DamageEntityPatch.cs" />
     <Compile Include="Harmony\EntityDeathPatch.cs" />
     <Compile Include="Utility\EntityDamageTracker.cs" />
@@ -66,13 +67,21 @@
       <Link>ModInfo.xml</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="README.md" />
-    <Content Include="Data\TrapInfo.txt" />
+    <None Include="UI\ui_game_symbol_shared_xp.png" />
+    <None Include="UI\ui_game_symbol_shared_xp.png">
+      <Link>UIAtlases\UIAtlas\ui_game_symbol_shared_xp.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\TrapInfo.txt" />
+    <None Include="README.md" />
     <None Include="Build.props" />
     <None Include="Build.targets" />
     <None Include="Local.props" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UIAtlases\UIAtlas\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

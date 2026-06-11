@@ -10,12 +10,14 @@ public class ShareMoreXPConfig
     public bool IsDebug;
 #endif
 
-    private const float DefaultXPRadius = 100f;
+    public bool DebugTranspilers;
+
+    private const float DefaultXPRadius = 150f;
     private const float DefaultPartyXPPercent = 0.5f;
     private const int DefaultPartyXPMinimumAmount = 1;
 
     public float TrapXPRadius = DefaultXPRadius;
-    public int TrapXPAmount = 100;
+    public int TrapXPAmount = 150;
     public bool TrapXPSplitEvenly = true;
     public int TrapXPSplitMinimumAmount = 5;
 
