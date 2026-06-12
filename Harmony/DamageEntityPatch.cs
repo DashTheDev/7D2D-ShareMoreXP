@@ -7,7 +7,7 @@ public class DamageEntityPatch
 {
     private static void Prefix(EntityAlive __instance, DamageSource _damageSource)
     {
-        if (!Utility.IsRunningOnServer())
+        if (Utility.IsNotRunningOnServer())
         {
             return;
         }

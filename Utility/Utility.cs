@@ -53,6 +53,11 @@ public class Utility
         return SingletonMonoBehaviour<ConnectionManager>.Instance.IsServer;
     }
 
+    public static bool IsNotRunningOnServer()
+    {
+        return !IsRunningOnServer();
+    }
+
     public static void GiveTrapKillXPToNearbyPlayers(Vector3 location, TrapType type)
     {
         List<EntityPlayer> nearbyPlayers = [];
@@ -66,7 +71,7 @@ public class Utility
 
             float distance = Vector3.Distance(location, player.position);
 
-            if (distance > ShareMoreXPMod.Config.TrapXPRadius)
+            if (distance > ShareMoreXPMod.Config.Traps.XPRadius)
             {
                 continue;
             }
@@ -74,11 +79,11 @@ public class Utility
             nearbyPlayers.Add(player);
         }
 
-        int amount = ShareMoreXPMod.Config.TrapXPAmount;
+        int amount = ShareMoreXPMod.Config.Traps.XPAmount;
 
-        if (ShareMoreXPMod.Config.TrapXPSplitEvenly)
+        if (ShareMoreXPMod.Config.Traps.XPSplitEvenly)
         {
-            amount = Math.Max((int)(amount / (float)nearbyPlayers.Count), ShareMoreXPMod.Config.TrapXPSplitMinimumAmount);
+            amount = Math.Max((int)(amount / (float)nearbyPlayers.Count), ShareMoreXPMod.Config.Traps.XPSplitMinimumAmount);
         }
 
         foreach (EntityPlayer player in nearbyPlayers)
@@ -94,7 +99,7 @@ public class Utility
             return;
         }
 
-        if (!IsRunningOnServer())
+        if (IsNotRunningOnServer())
         {
             player.SendSharedXPToServer(amount, xpType);
             return;

@@ -8,7 +8,7 @@ public class EntityDeathPatch
     [HarmonyPriority(Priority.Last)]
     static bool Prefix(EntityAlive __instance)
     {
-        if (!Utility.IsRunningOnServer())
+        if (Utility.IsNotRunningOnServer())
         {
             return true;
         }

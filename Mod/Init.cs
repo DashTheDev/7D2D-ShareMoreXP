@@ -7,12 +7,14 @@ namespace ShareMoreXP;
 
 public partial class ShareMoreXPMod : IModApi
 {
+    public static ShareMoreXPMod Instance { get; private set; }
     public static Mod ModInstance { get; private set; }
     public static ShareMoreXPConfig Config { get; private set; }
     public static bool IsDebug => Config is not null && Config.IsDebug;
 
     public void InitMod(Mod _modInstance)
     {
+        Instance = this;
         ModInstance = _modInstance;
         Config = new ShareMoreXPConfig();
         LoadConfig();
@@ -31,5 +33,13 @@ public partial class ShareMoreXPMod : IModApi
         }
 
         File.WriteAllText(path, JsonConvert.SerializeObject(Config, Formatting.Indented));
+    }
+
+    public void SetConfigInstance(ShareMoreXPConfig newConfig)
+    {
+        newConfig.IsEnabled = Config.IsEnabled;
+        newConfig.IsDebug = Config.IsDebug;
+        newConfig.DebugTranspilers = Config.DebugTranspilers;
+        Config = newConfig;
     }
 }

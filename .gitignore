@@ -9,3 +9,6 @@ out/
 
 # Local paths
 Local.props
+
+# Backup files
+*.bak
