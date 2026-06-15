@@ -1,12 +1,12 @@
-﻿using static WaterSimulationApplyChanges.ChangesForChunk;
-
-namespace ShareMoreXP;
+﻿namespace ShareMoreXP;
 
 public class ShareMoreXPConfig
 {
-    private const float DefaultXPRadius = 150f;
-    private const float DefaultPartyXPPercent = 0.5f;
-    private const int DefaultPartyXPMinimumAmount = 1;
+    private const XPShareRecipientType DefaultRecipientType = XPShareRecipientType.Party;
+    private const float DefaultProximityPenaltyPercentPerPlayer = 0.1f;
+    private const float DefaultRadius = 150f;
+    private const float DefaultFlatPercent = 0.5f;
+    private const int DefaultMinimumAmount = 1;
 
     public bool IsEnabled { get; set; } = true;
 
@@ -17,7 +17,9 @@ public class ShareMoreXPConfig
 #endif
 
     public bool DebugTranspilers { get; set; }
-    public TrapsConfig Traps { get; set; } = new();
+    public KillingConfig Killing { get; set; } = new();
+    public NonElectricalTrapKillingConfig NonElectricalTrapKilling { get; set; } = new();
+    public ElectricalTrapKillingConfig ElectricalTrapKilling { get; set; } = new();
     public HarvestingConfig Harvesting { get; set; } = new();
     public UpgradingConfig Upgrading { get; set; } = new();
     public CraftingConfig Crafting { get; set; } = new();
@@ -25,68 +27,108 @@ public class ShareMoreXPConfig
     public LootingConfig Looting { get; set; } = new();
     public RepairingConfig Repairing { get; set; } = new();
 
-    public class TrapsConfig
-    {
-        public float XPRadius { get; set; } = DefaultXPRadius;
-        public int XPAmount { get; set; } = 150;
-        public bool XPSplitEvenly { get; set; } = true;
-        public int XPSplitMinimumAmount { get; set; } = 5;
-    }
-
     public abstract class SharedXPConfig
     {
-        public bool XPShared { get; set; } = true;
-        public float XPRadius { get; set; } = DefaultXPRadius;
-        public float XPPercent { get; set; } = DefaultPartyXPPercent;
-        public int XPMinimumAmount { get; set; } = DefaultPartyXPMinimumAmount;
+        public SharedXPConfig()
+        {
+            ShareMode = GetDefaultShareMode();
+        }
+
+        public XPShareMode ShareMode { get; set; }
+        public XPShareRecipientType ShareRecipientType { get; set; } = DefaultRecipientType;
+        public float ProximityPenaltyPercentPerPlayer { get; set; } = DefaultProximityPenaltyPercentPerPlayer;
+        public float ShareRadius { get; set; } = DefaultRadius;
+        public float FlatPercent { get; set; } = DefaultFlatPercent;
+        public int MinimumAmount { get; set; } = DefaultMinimumAmount;
+
+        protected virtual XPShareMode GetDefaultShareMode() => XPShareMode.ProximityPenalty;
     }
 
-    public class HarvestingConfig : SharedXPConfig { }
-    public class UpgradingConfig : SharedXPConfig { }
-    public class CraftingConfig : SharedXPConfig { }
-    public class SellingConfig : SharedXPConfig { }
-    public class LootingConfig : SharedXPConfig { }
-    public class RepairingConfig : SharedXPConfig { }
+    public class KillingConfig : SharedXPConfig { }
+    public class NonElectricalTrapKillingConfig : SharedXPConfig { }
+    public class ElectricalTrapKillingConfig : SharedXPConfig
+    {
+        public bool RespectAdvancedEngineeringPercent { get; set; } = true;
+    }
 
-    private SharedXPConfig[] SharedXPConfigs => [Harvesting, Upgrading, Crafting, Selling, Looting, Repairing];
+    public class HarvestingConfig : SharedXPConfig
+    {
+        protected override XPShareMode GetDefaultShareMode() => XPShareMode.FlatPercent;
+    }
+
+    public class UpgradingConfig : SharedXPConfig
+    {
+        protected override XPShareMode GetDefaultShareMode() => XPShareMode.FlatPercent;
+    }
+
+    public class CraftingConfig : SharedXPConfig
+    {
+        protected override XPShareMode GetDefaultShareMode() => XPShareMode.FlatPercent;
+    }
+
+    public class SellingConfig : SharedXPConfig
+    {
+        protected override XPShareMode GetDefaultShareMode() => XPShareMode.FlatPercent;
+    }
+
+    public class LootingConfig : SharedXPConfig
+    {
+        protected override XPShareMode GetDefaultShareMode() => XPShareMode.FlatPercent;
+    }
+
+    public class RepairingConfig : SharedXPConfig
+    {
+        protected override XPShareMode GetDefaultShareMode() => XPShareMode.FlatPercent;
+    }
+
+    private SharedXPConfig[] SharedXPConfigs => [Killing, NonElectricalTrapKilling, ElectricalTrapKilling, Harvesting, Upgrading, Crafting, Selling, Looting, Repairing];
 
     public void Write(PooledBinaryWriter writer)
     {
-        writer.Write(Traps.XPRadius);
-        writer.Write(Traps.XPAmount);
-        writer.Write(Traps.XPSplitEvenly);
-        writer.Write(Traps.XPSplitMinimumAmount);
-
         foreach (SharedXPConfig sharedXPConfig in SharedXPConfigs)
         {
-            writer.Write(sharedXPConfig.XPShared);
-            writer.Write(sharedXPConfig.XPRadius);
-            writer.Write(sharedXPConfig.XPPercent);
-            writer.Write(sharedXPConfig.XPMinimumAmount);
+            writer.Write((short)sharedXPConfig.ShareMode);
+            writer.Write((short)sharedXPConfig.ShareRecipientType);
+            writer.Write(sharedXPConfig.ProximityPenaltyPercentPerPlayer);
+            writer.Write(sharedXPConfig.ShareRadius);
+            writer.Write(sharedXPConfig.FlatPercent);
+            writer.Write(sharedXPConfig.MinimumAmount);
+
+            if (sharedXPConfig is ElectricalTrapKillingConfig electricalTrapKillingConfig)
+            {
+                writer.Write(electricalTrapKillingConfig.RespectAdvancedEngineeringPercent);
+            }
         }
     }
 
     public void Read(PooledBinaryReader reader)
     {
-        Traps.XPRadius = reader.ReadSingle();
-        Traps.XPAmount = reader.ReadInt32();
-        Traps.XPSplitEvenly = reader.ReadBoolean();
-        Traps.XPSplitMinimumAmount = reader.ReadInt32();
-
         foreach (SharedXPConfig sharedXPConfig in SharedXPConfigs)
         {
-            sharedXPConfig.XPShared = reader.ReadBoolean();
-            sharedXPConfig.XPRadius = reader.ReadSingle();
-            sharedXPConfig.XPPercent = reader.ReadSingle();
-            sharedXPConfig.XPMinimumAmount = reader.ReadInt32();
+            sharedXPConfig.ShareMode = (XPShareMode)reader.ReadInt16();
+            sharedXPConfig.ShareRecipientType = (XPShareRecipientType)reader.ReadInt16();
+            sharedXPConfig.ProximityPenaltyPercentPerPlayer = reader.ReadSingle();
+            sharedXPConfig.ShareRadius = reader.ReadSingle();
+            sharedXPConfig.FlatPercent = reader.ReadSingle();
+            sharedXPConfig.MinimumAmount = reader.ReadInt32();
+
+            if (sharedXPConfig is ElectricalTrapKillingConfig electricalTrapKillingConfig)
+            {
+                electricalTrapKillingConfig.RespectAdvancedEngineeringPercent = reader.ReadBoolean();
+            }
         }
     }
 
-    public static int GetPackageLength()
+    public int GetPackageLength()
     {
-        int trapConfigLength = Constants.PackageFloatLength + Constants.PackageIntLength + Constants.PackageBoolLength + Constants.PackageIntLength;
-        int sharedXpConfigLength = Constants.PackageBoolLength + Constants.PackageFloatLength + Constants.PackageFloatLength + Constants.PackageIntLength;
-        int sharedXpConfigLengths = sharedXpConfigLength * 6;
-        return trapConfigLength + sharedXpConfigLengths;
+        int electricalTrapConfigAdditionalLength = Constants.PackageBoolLength;
+        int sharedXpConfigLength =
+            Constants.PackageShortLength +
+            Constants.PackageShortLength +
+            Constants.PackageFloatLength + 
+            Constants.PackageFloatLength + 
+            Constants.PackageFloatLength + 
+            Constants.PackageIntLength;
+        return sharedXpConfigLength * SharedXPConfigs.Length + electricalTrapConfigAdditionalLength;
     }
 }

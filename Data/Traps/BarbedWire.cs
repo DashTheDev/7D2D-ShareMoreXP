@@ -20,4 +20,9 @@ public class BarbedWire
     {
         return BlockTypes.Contains(blockType);
     }
+
+    public static bool ValidateXPName(string xpName)
+    {
+        return xpName.Contains(XPName);
+    }
 }

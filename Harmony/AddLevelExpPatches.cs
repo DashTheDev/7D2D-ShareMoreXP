@@ -1,29 +1,73 @@
 ﻿using System.Collections.Generic;
 using HarmonyLib;
+using static ShareMoreXP.ShareMoreXPConfig;
 
 namespace ShareMoreXP;
 
 [HarmonyPatch(typeof(Progression), nameof(Progression.AddLevelExp))]
 public class AddLevelExpPatches
 {
-    private static void Prefix(Progression __instance, int _exp, string _cvarXPName, Progression.XPTypes _xpType)
+    private static void Prefix(Progression __instance, ref int _exp, string _cvarXPName, Progression.XPTypes _xpType)
     {
-        Utility.LogLine($"Progression.AddLevelExp {{ XP: {_exp}, XPName: {_cvarXPName}, Type: {_xpType}}}");
+        GeneralUtility.LogLine($"Progression.AddLevelExp {{ XP: {_exp}, XPName: {_cvarXPName}, Type: {_xpType}}}");
 
-        // TODO: Read config from server rather than client
-        if (!_xpType.IsSharingEnabled() || XPHasBeenShared(_cvarXPName))
+        // XP has already been shared, no need to re-share it
+        if (XPHasBeenShared(_cvarXPName))
         {
             return;
         }
 
-        EntityPlayer player = __instance.parent as EntityPlayer;
-
-        if (player == null)
+        // Trap kills are shared via the server, no need to share
+        if (XPIsNonElectricalTrapKill(_cvarXPName) || XPIsElectricalTrapKill(_cvarXPName))
         {
             return;
         }
 
-        Utility.ShareXPToParty(player, _exp, _xpType);
+        EntityPlayer? sharingPlayer = __instance.parent as EntityPlayer;
+
+        if (sharingPlayer == null)
+        {
+            return;
+        }
+
+        SharedXPConfig xpConfig = _xpType switch
+        {
+            Progression.XPTypes.Harvesting => ShareMoreXPMod.Config.Harvesting,
+            Progression.XPTypes.Upgrading => ShareMoreXPMod.Config.Upgrading,
+            Progression.XPTypes.Crafting => ShareMoreXPMod.Config.Crafting,
+            Progression.XPTypes.Selling => ShareMoreXPMod.Config.Selling,
+            Progression.XPTypes.Looting => ShareMoreXPMod.Config.Looting,
+            Progression.XPTypes.Repairing => ShareMoreXPMod.Config.Repairing,
+            _ => ShareMoreXPMod.Config.Killing
+        };
+
+        _cvarXPName = $"{_cvarXPName}{Constants.SharedPartyXPNameSuffix}";
+
+        EntityPlayer[] recipientPlayers = XPUtility.GetRecipientPlayers(sharingPlayer, xpConfig);
+        int sharingPlayerAdjustedXPAmount = XPUtility.GetAdjustedXPAmount(_exp, xpConfig, true, recipientPlayers.Length);
+
+        if (GeneralUtility.IsNotRunningOnServer())
+        {
+            XPGainInfo xpInfo = new(sharingPlayer.entityId, _exp, _cvarXPName, _xpType);
+            NetPackageSmxpXPServer.SetupAndSend(xpInfo);
+        }
+        else
+        {
+            foreach (EntityPlayer player in recipientPlayers)
+            {
+                if (player.entityId == sharingPlayer.entityId || !player.isEntityRemote)
+                {
+                    continue;
+                }
+
+                int receivingPlayerAdjustedXPAmount = XPUtility.GetAdjustedXPAmount(_exp, xpConfig, false, recipientPlayers.Length);
+                XPAdjustedGainInfo adjustedXpInfo = new(player.entityId, _exp, receivingPlayerAdjustedXPAmount, _cvarXPName, _xpType);
+                NetPackageSmxpXPClient.SetupAndSend(adjustedXpInfo);
+            }
+        }
+
+        _exp = sharingPlayerAdjustedXPAmount;
+        GeneralUtility.LogLine($"Progression.AddLevelExp should have changed _exp to {sharingPlayerAdjustedXPAmount}");
     }
 
     [HarmonyTranspiler]
@@ -32,7 +76,7 @@ public class AddLevelExpPatches
         bool patched = false;
         List<CodeInstruction> codes = [.. instructions];
 
-        Utility.LogTranspilerBefore(nameof(AddLevelExpPatches), codes);
+        GeneralUtility.LogTranspilerBefore(nameof(AddLevelExpPatches), codes);
 
         for (int i = 0; i < codes.Count; i++)
         {
@@ -57,8 +101,8 @@ public class AddLevelExpPatches
             break;
         }
 
-        Utility.LogLine($"{nameof(AddLevelExpPatches)} Transpiler patch {(patched ? "was" : "was NOT")} applied!");
-        Utility.LogTranspilerAfter(nameof(AddLevelExpPatches), codes);
+        GeneralUtility.LogLine($"{nameof(AddLevelExpPatches)} Transpiler patch {(patched ? "was" : "was NOT")} applied!");
+        GeneralUtility.LogTranspilerAfter(nameof(AddLevelExpPatches), codes);
 
         return codes;
     }
@@ -70,21 +114,31 @@ public class AddLevelExpPatches
 
     private static bool XPIsTrapKill(string xpName)
     {
-        return xpName.Contains(Constants.SharedTrapXPNameSuffix);
+        return XPIsElectricalTrapKill(xpName) || XPIsNonElectricalTrapKill(xpName);
+    }
+
+    private static bool XPIsElectricalTrapKill(string xpName)
+    {
+        return xpName.Contains(Constants.SharedElectricalTrapXPNameSuffix);
+    }
+
+    private static bool XPIsNonElectricalTrapKill(string xpName)
+    {
+        return xpName.Contains(Constants.SharedNonElectricalTrapXPNameSuffix);
     }
 
     private static string GetXPIcon(string xpName)
     {
         if (XPHasBeenShared(xpName))
         {
-            return "ui_game_symbol_shared_xp";
+            return Constants.SharedXPIcon;
         }
 
         if (XPIsTrapKill(xpName))
         {
-            return "ui_game_symbol_trap_xp";
+            return Constants.TrapXPIcon;
         }
 
-        return "ui_game_symbol_xp";
+        return Constants.DefaultXPIcon;
     }
 }

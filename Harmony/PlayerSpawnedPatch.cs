@@ -7,7 +7,7 @@ public class PlayerSpawnedPatch
 {
     private static void Postfix(GameManager __instance, ClientInfo _cInfo, RespawnType _respawnReason, Vector3i _pos, int _entityId)
     {
-        if (Utility.IsNotRunningOnServer())
+        if (GeneralUtility.IsNotRunningOnServer())
         {
             return;
         }

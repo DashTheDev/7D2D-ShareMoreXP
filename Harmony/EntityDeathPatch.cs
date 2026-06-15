@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using static ShareMoreXP.ShareMoreXPConfig;
 
 namespace ShareMoreXP;
 
@@ -6,24 +7,56 @@ namespace ShareMoreXP;
 public class EntityDeathPatch
 {
     [HarmonyPriority(Priority.Last)]
-    static bool Prefix(EntityAlive __instance)
+    static void Postfix(EntityAlive __instance)
     {
-        if (Utility.IsNotRunningOnServer())
+        if (GeneralUtility.IsNotRunningOnServer())
         {
-            return true;
+            return;
         }
 
-        if (EntityDamageTracker.TryPopLatestEntityDamageType(__instance.entityId) is not EntityDamageType latestEntityDamageType)
+        GeneralUtility.LogLine($"OnEntityDeath {{ ID: {__instance.entityId}, Name: {__instance.entityName} }}");
+        GeneralUtility.LogLine($"lastDamageResponse.Source: {__instance.lastDamageResponse.Source != null}");
+
+        if (__instance?.lastDamageResponse.Source == null)
         {
-            return true;
+            return;
         }
 
-        if (latestEntityDamageType.ToTrapType() is not TrapType trapType)
+        TrapType? killedByTrapType = __instance.lastDamageResponse.Source.ToTrapType();
+
+        GeneralUtility.LogLine($"killedByTrapType: {killedByTrapType}");
+
+        if (!killedByTrapType.HasValue || killedByTrapType.Value.IsElectrical())
         {
-            return true;
+            return;
         }
 
-        Utility.GiveTrapKillXPToNearbyPlayers(__instance.position, trapType);
-        return true;
+        GeneralUtility.LogLine($"Going to calculate XP!");
+
+        int baseXPAmountForEntity = EntityClass.list[__instance.entityClass].ExperienceValue;
+        int xpAmount = (int)EffectManager.GetValue(PassiveEffects.ExperienceGain, __instance.inventory.holdingItemItemValue, baseXPAmountForEntity, __instance);
+        string xpName = killedByTrapType.Value.ToXPName();
+        SharedXPConfig xpConfig = ShareMoreXPMod.Config.NonElectricalTrapKilling;
+
+        EntityPlayer[] recipientPlayers = XPUtility.GetRecipientPlayers(__instance.position, xpConfig);
+        int adjustedXPAmount = XPUtility.GetAdjustedXPAmount(xpAmount, xpConfig, false, recipientPlayers.Length);
+
+        GeneralUtility.LogLine($"Ready to distribute XP {{ baseXPAmountForEntity: {baseXPAmountForEntity}, xpAmount: {xpAmount}, xpName: {xpName}, adjustedAmount: {adjustedXPAmount} }}");
+
+        foreach (EntityPlayer player in recipientPlayers)
+        {
+            GeneralUtility.LogLine($"Player!");
+
+            XPAdjustedGainInfo xpInfo = new(player.entityId, xpAmount, adjustedXPAmount, xpName, Progression.XPTypes.Kill);
+
+            if (!player.isEntityRemote)
+            {
+                player.AddXPInfoToProgression(xpInfo);
+            }
+            else
+            {
+                NetPackageSmxpXPClient.SetupAndSend(xpInfo);
+            }
+        }
     }
 }

@@ -39,7 +39,8 @@ DamageSource: External
 DamageType: Slashing
 ItemClassName: bladeTrap
 ItemClassID: 19058
-GetXPByDefault: false
+GetXPByDefault: false (only with Advanced Engineering)
+SharedXPByDefault: false
 
 Dart Trap
 -------------
@@ -49,7 +50,8 @@ DamageSource: External
 DamageType: Piercing
 ItemClassName: ammoDartIron
 ItemClassID: 65739
-GetXPByDefault: false
+GetXPByDefault: false (only with Advanced Engineering)
+SharedXPByDefault: false
 
 Robotic Turret
 -------------
@@ -59,7 +61,8 @@ DamageSource: External
 DamageType: Piercing
 ItemClassName: gunBotT2JunkTurret
 ItemClassID: 65600
-GetXPByDefault: true	
+GetXPByDefault: true
+SharedXPByDefault: true
 
 Shotgun Turret
 -------------
@@ -69,7 +72,8 @@ DamageSource: External
 DamageType: Piercing
 ItemClassName: ammoShotgunShell
 ItemClassID: 65678
-GetXPByDefault: false
+GetXPByDefault: false (only with Advanced Engineering)
+SharedXPByDefault: false
 
 SMG Turret
 -------------
@@ -79,7 +83,8 @@ DamageSource: External
 DamageType: Piercing
 ItemClassName: ammo9mmBulletBall
 ItemClassID: 65669
-GetXPByDefault: false
+GetXPByDefault: false (only with Advanced Engineering)
+SharedXPByDefault: false
 
 NOTES
 -------------

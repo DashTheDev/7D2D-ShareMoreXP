@@ -38,28 +38,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Data\BarbedWire.cs" />
+    <Compile Include="Data\Enums.cs" />
+    <Compile Include="Data\XPAdjustedGainInfo.cs" />
+    <Compile Include="Data\XPGainInfo.cs" />
+    <Compile Include="Data\Traps\SMGTurret.cs" />
+    <Compile Include="Data\Traps\ShotgunTurret.cs" />
+    <Compile Include="Data\Traps\DartTrap.cs" />
+    <Compile Include="Data\Traps\BladeTrap.cs" />
+    <Compile Include="Data\Traps\BarbedWire.cs" />
     <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\ReadableOpCodes.cs" />
-    <Compile Include="Data\TrapType.cs" />
-    <Compile Include="Data\IronSpikes.cs" />
+    <Compile Include="Data\Traps\IronSpikes.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Harmony\PlayerAddKillXPPatch.cs" />
     <Compile Include="Harmony\PlayerSpawnedPatch.cs" />
+    <Compile Include="Network\NetPackageSmxpXPServer.cs" />
+    <Compile Include="Network\NetPackageSmxpXPClient.cs" />
     <Compile Include="Network\NetPackageSmxpConfigClient.cs" />
-    <Compile Include="Network\NetPackageTrapXPClient.cs" />
-    <Compile Include="Data\EntityDamageType.cs" />
-    <Compile Include="Data\WoodSpikes.cs" />
+    <Compile Include="Data\Traps\WoodSpikes.cs" />
     <Compile Include="Harmony\AddLevelExpPatches.cs" />
-    <Compile Include="Harmony\DamageEntityPatch.cs" />
     <Compile Include="Harmony\EntityDeathPatch.cs" />
-    <Compile Include="Utility\EntityDamageTracker.cs" />
-    <Compile Include="Extensions\EntityDamageTypeExtensions.cs" />
     <Compile Include="Extensions\TrapTypeExtensions.cs" />
-    <Compile Include="Network\NetPackageShareXPServer.cs" />
-    <Compile Include="Network\NetPackageShareXPClient.cs" />
     <Compile Include="Extensions\XPTypeExtensions.cs" />
     <Compile Include="Extensions\EntityPlayerExtensions.cs" />
     <Compile Include="Extensions\DamageSourceExtensions.cs" />
-    <Compile Include="Utility\Utility.cs" />
+    <Compile Include="Utility\XPUtility.cs" />
+    <Compile Include="Utility\GeneralUtility.cs" />
     <Compile Include="Mod\Init.cs" />
     <Compile Include="Mod\Config.cs" />
   </ItemGroup>
@@ -71,29 +75,34 @@
     </None>
     <None Include="UI\ui_game_symbol_shared_xp.png" />
     <None Include="UI\ui_game_symbol_shared_xp.png">
+      <Visible>false</Visible>
       <Link>UIAtlases\UIAtlas\ui_game_symbol_shared_xp.png</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="UI\ui_game_symbol_trap_xp.png" />
     <None Include="UI\ui_game_symbol_trap_xp.png">
+      <Visible>false</Visible>
       <Link>UIAtlases\UIAtlas\ui_game_symbol_trap_xp.png</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\TrapInfo.txt" />
+    <Content Include="Data\Traps\TrapInfo.txt" />
     <None Include="README.md" />
     <None Include="Build.props" />
     <None Include="Build.targets" />
     <None Include="Local.props" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UIAtlases\UIAtlas\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\Tools\Directory.Build.targets" Condition="Exists('$(SolutionDir)\Tools\Directory.Build.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties mod_4config_1json__JsonSchema="https://www.schemastore.org/appsettings.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
