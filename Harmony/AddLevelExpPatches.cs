@@ -67,7 +67,6 @@ public class AddLevelExpPatches
         }
 
         _exp = sharingPlayerAdjustedXPAmount;
-        GeneralUtility.LogLine($"Progression.AddLevelExp should have changed _exp to {sharingPlayerAdjustedXPAmount}");
     }
 
     [HarmonyTranspiler]

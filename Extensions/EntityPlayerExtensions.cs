@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace ShareMoreXP;
+﻿namespace ShareMoreXP;
 
 public static class EntityPlayerExtensions
 {
@@ -25,8 +23,6 @@ public static class EntityPlayerExtensions
         {
             return;
         }
-
-        GeneralUtility.LogLine($"Adding XP via XP INFO");
 
         player.Progression.AddLevelExp(xpInfo.AdjustedAmount, xpInfo.Name, xpInfo.Type);
     }
