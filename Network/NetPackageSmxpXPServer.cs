@@ -1,4 +1,4 @@
-﻿using System.Xml.Linq;
+﻿using DashTheDev.SDTD.ModCore;
 using static ShareMoreXP.ShareMoreXPConfig;
 
 namespace ShareMoreXP;
@@ -36,13 +36,13 @@ public class NetPackageSmxpXPServer : NetPackage
 
         SharedXPConfig xpConfig = XpInfo.Type switch
         {
-            Progression.XPTypes.Harvesting => ShareMoreXPMod.Config.Harvesting,
-            Progression.XPTypes.Upgrading => ShareMoreXPMod.Config.Upgrading,
-            Progression.XPTypes.Crafting => ShareMoreXPMod.Config.Crafting,
-            Progression.XPTypes.Selling => ShareMoreXPMod.Config.Selling,
-            Progression.XPTypes.Looting => ShareMoreXPMod.Config.Looting,
-            Progression.XPTypes.Repairing => ShareMoreXPMod.Config.Repairing,
-            _ => ShareMoreXPMod.Config.Killing
+            Progression.XPTypes.Harvesting => ShareMoreXPMod.Instance.Config.Harvesting,
+            Progression.XPTypes.Upgrading => ShareMoreXPMod.Instance.Config.Upgrading,
+            Progression.XPTypes.Crafting => ShareMoreXPMod.Instance.Config.Crafting,
+            Progression.XPTypes.Selling => ShareMoreXPMod.Instance.Config.Selling,
+            Progression.XPTypes.Looting => ShareMoreXPMod.Instance.Config.Looting,
+            Progression.XPTypes.Repairing => ShareMoreXPMod.Instance.Config.Repairing,
+            _ => ShareMoreXPMod.Instance.Config.Killing
         };
 
         if (XpInfo.Name.Contains(Constants.SharedNonElectricalTrapXPNameSuffix))
@@ -52,7 +52,7 @@ public class NetPackageSmxpXPServer : NetPackage
 
         if (XpInfo.Name.Contains(Constants.SharedElectricalTrapXPNameSuffix))
         {
-            xpConfig = ShareMoreXPMod.Config.ElectricalTrapKilling;
+            xpConfig = ShareMoreXPMod.Instance.Config.ElectricalTrapKilling;
         }
 
         EntityPlayer? sharingPlayer = GameManager.Instance.World.GetEntity(XpInfo.EntityID) as EntityPlayer;
@@ -84,13 +84,13 @@ public class NetPackageSmxpXPServer : NetPackage
             }
         }
 
-        GeneralUtility.LogLine("Received XP package from client!");
+       ShareMoreXPMod.Instance.Logger.LogLine("Received XP package from client!");
     }
 
     public static void SetupAndSend(XPGainInfo xpInfo)
     {
         NetPackageSmxpXPServer package = NetPackageManager.GetPackage<NetPackageSmxpXPServer>().Setup(xpInfo);
         SingletonMonoBehaviour<ConnectionManager>.Instance.SendToServer(package);
-        GeneralUtility.LogLine("Sending XP package to server!");
+       ShareMoreXPMod.Instance.Logger.LogLine("Sending XP package to server!");
     }
 }

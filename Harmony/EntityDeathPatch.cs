@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using DashTheDev.SDTD.ModCore;
+using HarmonyLib;
 using static ShareMoreXP.ShareMoreXPConfig;
 
 namespace ShareMoreXP;
@@ -29,7 +30,7 @@ public class EntityDeathPatch
         int baseXPAmountForEntity = EntityClass.list[__instance.entityClass].ExperienceValue;
         int xpAmount = (int)EffectManager.GetValue(PassiveEffects.ExperienceGain, __instance.inventory.holdingItemItemValue, baseXPAmountForEntity, __instance);
         string xpName = killedByTrapType.Value.ToXPName();
-        SharedXPConfig xpConfig = ShareMoreXPMod.Config.NonElectricalTrapKilling;
+        SharedXPConfig xpConfig = ShareMoreXPMod.Instance.Config.NonElectricalTrapKilling;
 
         EntityPlayer[] recipientPlayers = XPUtility.GetRecipientPlayers(__instance.position, xpConfig);
         int adjustedXPAmount = XPUtility.GetAdjustedXPAmount(xpAmount, xpConfig, false, recipientPlayers.Length);

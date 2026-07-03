@@ -9,7 +9,7 @@ public class NetPackageSmxpConfigClient : NetPackage
 
     public NetPackageSmxpConfigClient Setup()
     {
-        Config = ShareMoreXPMod.Config;
+        Config = ShareMoreXPMod.Instance.Config;
         return this;
     }
 
@@ -26,14 +26,14 @@ public class NetPackageSmxpConfigClient : NetPackage
 
     public override void ProcessPackage(World world, GameManager callbacks)
     {
-        ShareMoreXPMod.Instance.SetConfigInstance(Config);
-        GeneralUtility.LogLine("Received config from server!");
+        ShareMoreXPMod.Instance.Config.CopyFrom(Config);
+       ShareMoreXPMod.Instance.Logger.LogLine("Received config from server!");
     }
 
     public static void SetupAndSend(int entityId)
     {
         NetPackageSmxpConfigClient package = NetPackageManager.GetPackage<NetPackageSmxpConfigClient>().Setup();
         SingletonMonoBehaviour<ConnectionManager>.Instance.SendPackage(package, _attachedToEntityId: entityId);
-        GeneralUtility.LogLine("Sending config to client!");
+       ShareMoreXPMod.Instance.Logger.LogLine("Sending config to client!");
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DashTheDev.SDTD.ModCore;
 using HarmonyLib;
 using static ShareMoreXP.ShareMoreXPConfig;
 
@@ -9,7 +10,7 @@ public class AddLevelExpPatches
 {
     private static void Prefix(Progression __instance, ref int _exp, string _cvarXPName, Progression.XPTypes _xpType)
     {
-        GeneralUtility.LogLine($"Progression.AddLevelExp {{ XP: {_exp}, XPName: {_cvarXPName}, Type: {_xpType}}}");
+       ShareMoreXPMod.Instance.Logger.LogLine($"Progression.AddLevelExp {{ XP: {_exp}, XPName: {_cvarXPName}, Type: {_xpType}}}");
 
         // XP has already been shared, no need to re-share it
         if (XPHasBeenShared(_cvarXPName))
@@ -32,13 +33,13 @@ public class AddLevelExpPatches
 
         SharedXPConfig xpConfig = _xpType switch
         {
-            Progression.XPTypes.Harvesting => ShareMoreXPMod.Config.Harvesting,
-            Progression.XPTypes.Upgrading => ShareMoreXPMod.Config.Upgrading,
-            Progression.XPTypes.Crafting => ShareMoreXPMod.Config.Crafting,
-            Progression.XPTypes.Selling => ShareMoreXPMod.Config.Selling,
-            Progression.XPTypes.Looting => ShareMoreXPMod.Config.Looting,
-            Progression.XPTypes.Repairing => ShareMoreXPMod.Config.Repairing,
-            _ => ShareMoreXPMod.Config.Killing
+            Progression.XPTypes.Harvesting => ShareMoreXPMod.Instance.Config.Harvesting,
+            Progression.XPTypes.Upgrading => ShareMoreXPMod.Instance.Config.Upgrading,
+            Progression.XPTypes.Crafting => ShareMoreXPMod.Instance.Config.Crafting,
+            Progression.XPTypes.Selling => ShareMoreXPMod.Instance.Config.Selling,
+            Progression.XPTypes.Looting => ShareMoreXPMod.Instance.Config.Looting,
+            Progression.XPTypes.Repairing => ShareMoreXPMod.Instance.Config.Repairing,
+            _ => ShareMoreXPMod.Instance.Config.Killing
         };
 
         _cvarXPName = $"{_cvarXPName}{Constants.SharedPartyXPNameSuffix}";
@@ -75,7 +76,7 @@ public class AddLevelExpPatches
         bool patched = false;
         List<CodeInstruction> codes = [.. instructions];
 
-        GeneralUtility.LogTranspilerBefore(nameof(AddLevelExpPatches), codes);
+        ShareMoreXPMod.Instance.Logger.LogTranspilerBefore(nameof(AddLevelExpPatches), codes);
 
         for (int i = 0; i < codes.Count; i++)
         {
@@ -100,8 +101,8 @@ public class AddLevelExpPatches
             break;
         }
 
-        GeneralUtility.LogLine($"{nameof(AddLevelExpPatches)} Transpiler patch {(patched ? "was" : "was NOT")} applied!");
-        GeneralUtility.LogTranspilerAfter(nameof(AddLevelExpPatches), codes);
+       ShareMoreXPMod.Instance.Logger.LogLine($"{nameof(AddLevelExpPatches)} Transpiler patch {(patched ? "was" : "was NOT")} applied!");
+       ShareMoreXPMod.Instance.Logger.LogTranspilerAfter(nameof(AddLevelExpPatches), codes);
 
         return codes;
     }

@@ -38,7 +38,7 @@ public class NetPackageSmxpXPClient : NetPackage
             return;
         }
 
-        GeneralUtility.LogLine("Received XP package from server!");
+       ShareMoreXPMod.Instance.Logger.LogLine("Received XP package from server!");
         player.AddXPInfoToProgression(XpInfo);
     }
 
@@ -46,6 +46,6 @@ public class NetPackageSmxpXPClient : NetPackage
     {
         NetPackageSmxpXPClient package = NetPackageManager.GetPackage<NetPackageSmxpXPClient>().Setup(xpInfo);
         SingletonMonoBehaviour<ConnectionManager>.Instance.SendPackage(package, _attachedToEntityId: xpInfo.EntityID);
-        GeneralUtility.LogLine("Sending XP package to client!");
+       ShareMoreXPMod.Instance.Logger.LogLine("Sending XP package to client!");
     }
 }

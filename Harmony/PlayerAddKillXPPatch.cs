@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using static ShareMoreXP.ShareMoreXPConfig;
-using static UnityDistantTerrain;
 
 namespace ShareMoreXP;
 
@@ -17,16 +16,16 @@ public class PlayerAddKillXPPatch
         int baseXPAmountForEntity = EntityClass.list[killedEntity.entityClass].ExperienceValue;
         int xpAmount = (int)EffectManager.GetValue(PassiveEffects.ExperienceGain, killedEntity.inventory.holdingItemItemValue, baseXPAmountForEntity, killedEntity);
         string xpName = Constants.DefaultKillXPName;
-        SharedXPConfig xpConfig = ShareMoreXPMod.Config.Killing;
+        SharedXPConfig xpConfig = ShareMoreXPMod.Instance.Config.Killing;
         TrapType? killedByTrapType = killedEntity.lastDamageResponse.Source.ToTrapType();
 
         // ElectricalTrap kills are only processed on the server, so we can share authoritatively here
         if (killedByTrapType.HasValue && killedByTrapType.Value.IsElectrical())
         {
             xpName = killedByTrapType.Value.ToXPName();
-            xpConfig = ShareMoreXPMod.Config.ElectricalTrapKilling;
+            xpConfig = ShareMoreXPMod.Instance.Config.ElectricalTrapKilling;
 
-            if (ShareMoreXPMod.Config.ElectricalTrapKilling.RespectAdvancedEngineeringPercent)
+            if (ShareMoreXPMod.Instance.Config.ElectricalTrapKilling.RespectAdvancedEngineeringPercent)
             {
                 xpAmount = (int)(xpAmount * (double)xpModifier + 0.5);
             }

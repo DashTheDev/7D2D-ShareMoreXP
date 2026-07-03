@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using DashTheDev.SDTD.ModCore;
+using HarmonyLib;
 
 namespace ShareMoreXP;
 

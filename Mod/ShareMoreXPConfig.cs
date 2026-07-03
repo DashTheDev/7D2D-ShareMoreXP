@@ -1,6 +1,8 @@
-﻿namespace ShareMoreXP;
+﻿using DashTheDev.SDTD.ModCore;
 
-public class ShareMoreXPConfig
+namespace ShareMoreXP;
+
+public class ShareMoreXPConfig : XmlModConfig
 {
     private const XPShareRecipientType DefaultRecipientType = XPShareRecipientType.Party;
     private const float DefaultProximityPenaltyPercentPerPlayer = 0.1f;
@@ -8,15 +10,6 @@ public class ShareMoreXPConfig
     private const float DefaultFlatPercent = 0.5f;
     private const int DefaultMinimumAmount = 1;
 
-    public bool IsEnabled { get; set; } = true;
-
-#if DEBUG
-    public bool IsDebug { get; set; } = true;
-#else
-    public bool IsDebug { get; set; }
-#endif
-
-    public bool DebugTranspilers { get; set; }
     public KillingConfig Killing { get; set; } = new();
     public NonElectricalTrapKillingConfig NonElectricalTrapKilling { get; set; } = new();
     public ElectricalTrapKillingConfig ElectricalTrapKilling { get; set; } = new();
@@ -130,5 +123,18 @@ public class ShareMoreXPConfig
             Constants.PackageFloatLength + 
             Constants.PackageIntLength;
         return sharedXpConfigLength * SharedXPConfigs.Length + electricalTrapConfigAdditionalLength;
+    }
+
+    public void CopyFrom(ShareMoreXPConfig config)
+    {
+        Killing = config.Killing;
+        NonElectricalTrapKilling = config.NonElectricalTrapKilling;
+        ElectricalTrapKilling = config.ElectricalTrapKilling;
+        Harvesting = config.Harvesting;
+        Upgrading = config.Upgrading;
+        Crafting = config.Crafting;
+        Selling = config.Selling;
+        Looting = config.Looting;
+        Repairing = config.Repairing;
     }
 }
