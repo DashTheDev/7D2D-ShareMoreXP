@@ -2,7 +2,8 @@
 
 	<Import Project="Local.props" Condition="Exists('Local.props')" />
 	<Import Project="Build.props" />
-	<Import Project="Build.targets" />
+	<!-- TODO: Remove once referencing NuGet -->
+	<Import Project="..\ModLibs\Libraries\ModCore\DashTheDev.SDTD.ModCore.targets" />
 
 	<PropertyGroup>
 		<TargetFramework>net48</TargetFramework>
