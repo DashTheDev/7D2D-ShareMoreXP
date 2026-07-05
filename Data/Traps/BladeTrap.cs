@@ -2,13 +2,12 @@
 
 public class BladeTrap
 {
-    public const int DamageItemClassId = 19058;
     public const string DamageItemClassName = "bladeTrap";
     public const string XPName = "_xpFromBladeTrapKill";
 
-    public static bool ValidateItemClassId(int itemClassId)
+    public static bool ValidateItemClassName(string name)
     {
-        return DamageItemClassId == itemClassId;
+        return DamageItemClassName == name;
     }
 
     public static bool ValidateXPName(string xpName)

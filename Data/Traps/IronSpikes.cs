@@ -4,11 +4,6 @@ namespace ShareMoreXP;
 
 public class IronSpikes
 {
-    public const int BlockType_DamageStageZero = 23608;
-    public const int BlockType_DamageStageOne = 23607;
-    public const int BlockType_DamageStageTwo = 23606;
-    public static readonly int[] BlockTypes = [BlockType_DamageStageZero, BlockType_DamageStageOne, BlockType_DamageStageTwo];
-
     public const string BlockName_DamageStateZero = "trapSpikesIronDmg0";
     public const string BlockName_DamageStateOne = "trapSpikesIronDmg1";
     public const string BlockName_DamageStateTwo = "trapSpikesIronDmg2";
@@ -16,9 +11,9 @@ public class IronSpikes
 
     public const string XPName = "_xpFromIronSpikesKill";
 
-    public static bool ValidateBlockType(int blockType)
+    public static bool ValidateBlockName(string name)
     {
-        return BlockTypes.Contains(blockType);
+        return BlockNames.Contains(name);
     }
 
     public static bool ValidateXPName(string xpName)

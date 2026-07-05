@@ -11,12 +11,13 @@ public static class DamageSourceExtensions
 
         return source.ItemClass.Id switch
         {
-            _ when WoodSpikes.ValidateBlockType(source.ItemClass.Id) => TrapType.WoodSpikes,
-            _ when IronSpikes.ValidateBlockType(source.ItemClass.Id) => TrapType.IronSpikes,
-            _ when BarbedWire.ValidateBlockType(source.ItemClass.Id) => TrapType.BarbedWire,
-            _ when BladeTrap.ValidateItemClassId(source.ItemClass.Id) => TrapType.BladeTrap,
-            _ when ShotgunTurret.ValidateItemClassId(source.ItemClass.Id) => TrapType.ShotgunTurret,
-            _ when SMGTurret.ValidateItemClassId(source.ItemClass.Id) => TrapType.SMGTurret,
+            _ when WoodSpikes.ValidateBlockName(source.ItemClass.Name) => TrapType.WoodSpikes,
+            _ when IronSpikes.ValidateBlockName(source.ItemClass.Name) => TrapType.IronSpikes,
+            _ when BarbedWire.ValidateBlockName(source.ItemClass.Name) => TrapType.BarbedWire,
+            _ when BladeTrap.ValidateItemClassName(source.ItemClass.Name) => TrapType.BladeTrap,
+            _ when ShotgunTurret.ValidateItemClassName(source.ItemClass.Name) => TrapType.ShotgunTurret,
+            _ when SMGTurret.ValidateItemClassName(source.ItemClass.Name) => TrapType.SMGTurret,
+            _ when AutoTurret.ValidateItemClassName(source.ItemClass.Name) => TrapType.AutoTurret,
             _ => null
         };
     }

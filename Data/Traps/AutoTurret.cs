@@ -1,9 +1,9 @@
 ﻿namespace ShareMoreXP;
 
-public class ShotgunTurret
+public class AutoTurret
 {
-    public const string DamageItemClassName = "ammoShotgunShell";
-    public const string XPName = "_xpFromShotgunTurretKill";
+    public const string DamageItemClassName = "ammo762mmBulletBall";
+    public const string XPName = "_xpFromAutoTurretKill";
 
     public static bool ValidateItemClassName(string name)
     {

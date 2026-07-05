@@ -8,7 +8,8 @@ public enum TrapType
     BladeTrap,
     DartTrap,
     ShotgunTurret,
-    SMGTurret
+    SMGTurret,
+    AutoTurret
 }
 
 public enum XPShareMode

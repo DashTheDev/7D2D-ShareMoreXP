@@ -2,13 +2,12 @@
 
 public class SMGTurret
 {
-    public const int DamageItemClassId = 65669;
     public const string DamageItemClassName = "ammo9mmBulletBall";
     public const string XPName = "_xpFromSMGTurretKill";
 
-    public static bool ValidateItemClassId(int itemClassId)
+    public static bool ValidateItemClassName(string name)
     {
-        return DamageItemClassId == itemClassId;
+        return DamageItemClassName == name;
     }
 
     public static bool ValidateXPName(string xpName)

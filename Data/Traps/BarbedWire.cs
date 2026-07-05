@@ -4,11 +4,6 @@ namespace ShareMoreXP;
 
 public class BarbedWire
 {
-    public const int BlockType_DamageStageZero = 23613;
-    public const int BlockType_DamageStageOne = 23614;
-    public const int BlockType_DamageStageTwo = 23615;
-    public static readonly int[] BlockTypes = [BlockType_DamageStageZero, BlockType_DamageStageOne, BlockType_DamageStageTwo];
-
     public const string BlockName_DamageStateZero = "barbedFence";
     public const string BlockName_DamageStateOne = "barbedFenceDamaged01";
     public const string BlockName_DamageStateTwo = "barbedFenceDamaged02";
@@ -16,9 +11,9 @@ public class BarbedWire
 
     public const string XPName = "_xpFromBarbedWireKill";
 
-    public static bool ValidateBlockType(int blockType)
+    public static bool ValidateBlockName(string name)
     {
-        return BlockTypes.Contains(blockType);
+        return BlockNames.Contains(name);
     }
 
     public static bool ValidateXPName(string xpName)
