@@ -2,8 +2,6 @@
 
 	<Import Project="Local.props" Condition="Exists('Local.props')" />
 	<Import Project="Build.props" />
-	<!-- TODO: Remove once referencing NuGet -->
-	<Import Project="..\ModLibs\Libraries\ModCore\DashTheDev.SDTD.ModCore.targets" />
 
 	<PropertyGroup>
 		<TargetFramework>net48</TargetFramework>
@@ -17,9 +15,10 @@
 		<DefineConstants>$(GameVersion)</DefineConstants>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\ModLibs\Libraries\ModCore\ModCore.csproj" />
-	</ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<DebugType>none</DebugType>
+		<DebugSymbols>false</DebugSymbols>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="LICENSE.txt" CopyToOutputDirectory="Always" />
@@ -27,5 +26,9 @@
 		<None Include="Mod\ModConfig.xml" TargetPath="ModConfig.xml" CopyToOutputDirectory="Always" />
 		<None Include="UI\ui_game_symbol_shared_xp.png" TargetPath="UIAtlases\UIAtlas\ui_game_symbol_shared_xp.png" CopyToOutputDirectory="Always" />
 		<None Include="UI\ui_game_symbol_trap_xp.png" TargetPath="UIAtlases\UIAtlas\ui_game_symbol_trap_xp.png" CopyToOutputDirectory="Always" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="DashTheDev.7D2D.ModCore" Version="1.0.3" />
 	</ItemGroup>
 </Project>
